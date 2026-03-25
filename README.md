@@ -113,6 +113,19 @@ npm start
 
 Frontend runs at: `http://localhost:3000`
 
+API connection behavior in development:
+
+- Frontend calls `/api/predict` (relative path)
+- `package.json` includes a React proxy to `http://localhost:5000`
+- You can override API host with `REACT_APP_API_BASE_URL` if backend is on another machine
+
+Example (Windows PowerShell):
+
+```powershell
+$env:REACT_APP_API_BASE_URL="http://192.168.1.10:5000"
+npm start
+```
+
 ## How to Use
 
 1. Keep backend (`app.py`) and frontend (`npm start`) running.
@@ -125,7 +138,10 @@ Frontend runs at: `http://localhost:3000`
 
 ## Common Issues
 
-- **CORS / API connection error**: ensure Flask is running on port `5000`.
+- **Failed to connect to API**:
+  - Ensure Flask is running (`python app.py`) and reachable at `http://localhost:5000/health`
+  - Ensure frontend is started from this project so proxy settings in `package.json` are used
+  - If backend runs on another host, set `REACT_APP_API_BASE_URL` before `npm start`
 - **Model files missing**: run `python real.py` before starting `app.py`.
 - **NLTK stopwords error**: run `python -c "import nltk; nltk.download('stopwords')"`.
 - **Port already in use**: stop the conflicting process or change app port.
